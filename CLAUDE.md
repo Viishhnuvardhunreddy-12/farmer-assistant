@@ -91,7 +91,7 @@ Reply on the same channel
 
 - **Backend:** Python 3.11+, FastAPI, uvicorn
 - **Messaging:** Telegram Bot API for local testing (polling script, no public URL needed); WhatsApp Cloud API for real users
-- **LLM:** selectable with `LLM_PROVIDER`. Default is **Gemini** (`google-genai` SDK, `GEMINI_MODEL`, default `gemini-3.8-flash`; check with `scripts/list_models.py`). **Claude** (`anthropic` SDK, `LLM_MODEL`, default `claude-opus-5-5`, with server-side refusal fallback) is also supported. Both live in `app/llm/client.py` behind one `LLM.parse()` interface that returns a validated Pydantic object; callers pass provider-neutral content (text and `Media` images). Every LLM step uses structured JSON output.
+- **LLM:** selectable with `LLM_PROVIDER`. Default is **Gemini** (`google-genai` SDK, `GEMINI_MODEL`, default `gemini-2.5-flash`; check with `scripts/list_models.py`). **Claude** (`anthropic` SDK, `LLM_MODEL`, default `claude-opus-5-5`, with server-side refusal fallback) is also supported. Both live in `app/llm/client.py` behind one `LLM.parse()` interface that returns a validated Pydantic object; callers pass provider-neutral content (text and `Media` images). Every LLM step uses structured JSON output.
 - **Vector DB:** Chroma, embedded (persists to `data/processed/chroma`, no server). Default embedding model is English, so sources are indexed in English and farmer questions are turned into an English search query first.
 - **Disease detection:** LLM vision (Gemini or Claude) for now; later a fine-tuned classifier (PlantVillage-style data, then real field photos from users)
 - **Speech:** pluggable interface in `app/speech/`; provider not chosen yet (see section 2)

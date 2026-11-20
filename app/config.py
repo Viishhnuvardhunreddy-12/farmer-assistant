@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     # LLM: "gemini" or "claude"
     llm_provider: str = "gemini"
     gemini_api_key: str = ""
-    gemini_model: str = "gemini-3.8-flash"
+    gemini_model: str = "gemini-2.5-flash"
     anthropic_api_key: str = ""
     llm_model: str = "claude-opus-5-5"
 

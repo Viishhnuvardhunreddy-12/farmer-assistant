@@ -59,7 +59,17 @@ class GeminiLLM:
         # Created on first use: the SDK raises without a key, and the server should still start.
         # Empty key → SDK reads GEMINI_API_KEY / GOOGLE_API_KEY from the environment.
         if self._client is None:
-            self._client = genai.Client(api_key=self._api_key or None)
+            # v1beta: system instructions are not enabled on the v1 API for every model.
+            self._client = genai.Client(
+                api_key=self._api_key or None,
+                http_options=genai_types.HttpOptions(
+                    api_version="v1beta",
+                    # Retry brief overloads (503) and rate limits (429) before falling back.
+                    retry_options=genai_types.HttpRetryOptions(
+                        attempts=3, initial_delay=1.0, max_delay=8.0
+                    ),
+                ),
+            )
         return self._client
 
     @staticmethod
@@ -92,11 +102,10 @@ class GeminiLLM:
                     response_schema=output_type,
                 ),
             )
-        except genai_errors.ClientError as e:
+        except genai_errors.APIError as e:
             if e.code == 404:
                 log.error("Gemini model %r not found; check GEMINI_MODEL", self.model)
-            raise LLMUnavailable(f"API error {e.code}") from e
-        except genai_errors.APIError as e:
+            log.warning("Gemini %s error %s: %s", self.model, e.code, (e.message or "")[:300])
             raise LLMUnavailable(f"API error {e.code}") from e
         except ValueError as e:  # e.g. no API key configured
             raise LLMUnavailable(str(e)) from e
