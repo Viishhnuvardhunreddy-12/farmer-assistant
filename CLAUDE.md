@@ -76,7 +76,7 @@ pipeline.handle_message
       │
       ├─ consent check (first contact)
       ├─ voice  → speech/ STT  (when a provider is configured)
-      ├─ photo  → vision/ diagnose (Claude vision, structured output)
+      ├─ photo  → vision/ diagnose (LLM vision, structured output)
       ├─ text   → llm/ understand (scope check + English search query)
       ├─ rag/ retrieve from Chroma (trusted sources only)
       ├─ llm/ grounded answer (structured: answer, quotes, confidence)
@@ -91,9 +91,9 @@ Reply on the same channel
 
 - **Backend:** Python 3.11+, FastAPI, uvicorn
 - **Messaging:** Telegram Bot API for local testing (polling script, no public URL needed); WhatsApp Cloud API for real users
-- **LLM:** Claude via the official `anthropic` SDK (`LLM_MODEL`, default `claude-opus-5-5`). Structured outputs (`messages.parse` with Pydantic models) for every LLM step. Server-side refusal fallback is enabled (`fallbacks: "default"`).
+- **LLM:** selectable with `LLM_PROVIDER`. Default is **Gemini** (`google-genai` SDK, `GEMINI_MODEL`, default `gemini-3.8-flash`; check with `scripts/list_models.py`). **Claude** (`anthropic` SDK, `LLM_MODEL`, default `claude-opus-5-5`, with server-side refusal fallback) is also supported. Both live in `app/llm/client.py` behind one `LLM.parse()` interface that returns a validated Pydantic object; callers pass provider-neutral content (text and `Media` images). Every LLM step uses structured JSON output.
 - **Vector DB:** Chroma, embedded (persists to `data/processed/chroma`, no server). Default embedding model is English, so sources are indexed in English and farmer questions are turned into an English search query first.
-- **Disease detection:** Claude vision for now; later a fine-tuned classifier (PlantVillage-style data, then real field photos from users)
+- **Disease detection:** LLM vision (Gemini or Claude) for now; later a fine-tuned classifier (PlantVillage-style data, then real field photos from users)
 - **Speech:** pluggable interface in `app/speech/`; provider not chosen yet (see section 2)
 - **Storage:** SQLite (`data/app.db`) for consent and interaction logs in Phase 1. Move to Postgres in Phase 2 when farmer profiles arrive.
 
@@ -119,7 +119,7 @@ AIhealthcare/                 # folder name is historical; this is the farmer as
 │   ├── speech/               # STT/TTS interface (+ null provider)
 │   ├── vision/               # crop disease diagnosis
 │   ├── rag/                  # ingestion, chunking, retrieval
-│   ├── llm/                  # Claude client + all prompts and output schemas
+│   ├── llm/                  # Gemini/Claude clients + all prompts and output schemas
 │   └── safety/               # quote/number verification, fallback decisions
 ├── data/
 │   ├── sources/              # trusted docs (PDF/TXT/MD) + sources.json manifest
@@ -160,6 +160,9 @@ python scripts/telegram_polling.py
 
 # run the webhook server (WhatsApp / Telegram webhooks)
 uvicorn app.main:app --reload
+
+# list Gemini models your key can use (to set GEMINI_MODEL)
+python scripts/list_models.py
 
 # run expert-reviewed eval set
 python scripts/eval.py

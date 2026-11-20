@@ -1,7 +1,5 @@
 """Crop problem diagnosis from a photo. Diagnosis only, never treatment (CLAUDE.md §3)."""
 
-import base64
-
 from app.config import Settings
 from app.llm.client import LLM
 from app.llm.prompts import VISION_SYSTEM, fmt
@@ -12,21 +10,9 @@ SUPPORTED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
 
 
 async def diagnose(llm: LLM, settings: Settings, image: Media, caption: str = "") -> Diagnosis:
-    mime = image.mime_type if image.mime_type in SUPPORTED_IMAGE_TYPES else "image/jpeg"
-    content = [
-        {
-            "type": "image",
-            "source": {
-                "type": "base64",
-                "media_type": mime,
-                "data": base64.standard_b64encode(image.data).decode("ascii"),
-            },
-        },
-        {
-            "type": "text",
-            "text": f"Target crop: {settings.crop}. Farmer's note: {caption or '(none)'}",
-        },
-    ]
+    if image.mime_type not in SUPPORTED_IMAGE_TYPES:
+        image = Media(image.data, "image/jpeg")
+    content = [image, f"Target crop: {settings.crop}. Farmer's note: {caption or '(none)'}"]
     return await llm.parse(fmt(VISION_SYSTEM, settings), content, Diagnosis, effort="medium")
 
 

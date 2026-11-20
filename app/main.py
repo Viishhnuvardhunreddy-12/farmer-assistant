@@ -8,7 +8,7 @@ from fastapi import BackgroundTasks, FastAPI, Header, HTTPException, Query, Requ
 from fastapi.responses import PlainTextResponse
 
 from app.config import Settings, get_settings
-from app.llm.client import ClaudeLLM
+from app.llm.client import build_llm
 from app.messaging.base import Messenger
 from app.messaging.telegram import TelegramClient
 from app.messaging.whatsapp import WhatsAppClient, extract_messages, verify_signature
@@ -25,7 +25,7 @@ log = logging.getLogger(__name__)
 def build_pipeline(settings: Settings) -> Pipeline:
     return Pipeline(
         settings=settings,
-        llm=ClaudeLLM(settings.llm_model, settings.anthropic_api_key),
+        llm=build_llm(settings),
         retriever=Retriever(str(settings.chroma_dir), settings.collection_name),
         store=Store(settings.db_path, settings.user_id_salt),
         speech=get_speech_provider(settings.speech_provider),

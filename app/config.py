@@ -16,7 +16,10 @@ class Settings(BaseSettings):
     language_name: str = "Telugu"
     expert_contact: str = "Kisan Call Centre: 1800-180-1551 (toll free)"
 
-    # LLM
+    # LLM: "gemini" or "claude"
+    llm_provider: str = "gemini"
+    gemini_api_key: str = ""
+    gemini_model: str = "gemini-3.8-flash"
     anthropic_api_key: str = ""
     llm_model: str = "claude-opus-5-5"
 
