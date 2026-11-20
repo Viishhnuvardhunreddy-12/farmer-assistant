@@ -43,13 +43,15 @@ def gemini_with(response) -> GeminiLLM:
 
 
 async def test_gemini_returns_parsed_output():
-    parsed = Understanding(category="greeting", search_query_en="")
+    parsed = Understanding(category="greeting", search_query_en="", likely_conditions=[])
     resp = SimpleNamespace(prompt_feedback=None, parsed=parsed, text="", candidates=[])
     assert await gemini_with(resp).parse("sys", "hi", Understanding) == parsed
 
 
 async def test_gemini_falls_back_to_json_text():
-    text = '{"category": "crop_question", "search_query_en": "rice blast"}'
+    text = (
+        '{"category": "crop_question", "search_query_en": "rice blast", ' '"likely_conditions": []}'
+    )
     resp = SimpleNamespace(prompt_feedback=None, parsed=None, text=text, candidates=[])
     out = await gemini_with(resp).parse("sys", "hi", Understanding)
     assert out.search_query_en == "rice blast"

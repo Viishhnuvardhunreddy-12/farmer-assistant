@@ -19,7 +19,7 @@ cp .env.example .env    # add GEMINI_API_KEY (or LLM_PROVIDER=claude + ANTHROPIC
    (see `data/sources/README.md`).
 2. `python scripts/list_models.py` to confirm your key works and `GEMINI_MODEL` exists.
 3. `python scripts/ingest.py` (the first run downloads an ~80 MB embedding model).
-4. Try it: `python scripts/ask.py "leaves have brown spots with grey centre"`
+4. Try it: `python scripts/ask.py "my chilli leaves are curling upwards"`
 5. Telegram test bot: set `TELEGRAM_BOT_TOKEN`, then `python scripts/telegram_polling.py`.
 
 ## How an answer is made safe

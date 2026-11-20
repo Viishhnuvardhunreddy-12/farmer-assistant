@@ -16,6 +16,10 @@ class Understanding(BaseModel):
         description="Short English search query for the source documents. Empty unless "
         "category is crop_question."
     )
+    likely_conditions: list[str] = Field(
+        description="If the farmer describes symptoms, up to 2 English names of the most likely "
+        "diseases, pests or deficiencies. Used only to search the documents. Empty otherwise."
+    )
 
 
 class Diagnosis(BaseModel):

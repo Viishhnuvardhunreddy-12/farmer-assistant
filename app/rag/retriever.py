@@ -33,7 +33,10 @@ class Retriever:
             self._collection.add(
                 ids=[c.doc_id for c in batch],
                 documents=[c.text for c in batch],
-                metadatas=[{"source_title": c.source_title, "page": c.page or 0} for c in batch],
+                metadatas=[
+                    {"source_title": c.source_title, "page": c.page or 0, "section": c.section}
+                    for c in batch
+                ],
             )
 
     def count(self) -> int:
@@ -54,14 +57,73 @@ class Retriever:
             similarity = 1.0 - float(dist)
             if similarity < min_similarity:
                 continue
-            out.append(
-                RetrievedChunk(
-                    id=f"S{len(out) + 1}",
-                    text=text,
-                    source_title=str(meta.get("source_title", "")),
-                    page=int(meta.get("page") or 0) or None,
-                    similarity=similarity,
-                    doc_id=doc_id,
-                )
-            )
+            out.append(_to_chunk(f"S{len(out) + 1}", doc_id, text, meta, similarity))
         return out
+
+    def _section_chunks(self, section: str, similarity: float) -> list[RetrievedChunk]:
+        res = self._collection.get(where={"section": section})
+        return [
+            _to_chunk("", doc_id, text, meta, similarity)
+            for doc_id, text, meta in zip(
+                res["ids"], res["documents"], res["metadatas"], strict=True
+            )
+        ]
+
+    def search_many(
+        self,
+        queries: list[str],
+        top_k: int,
+        min_similarity: float,
+        max_sections: int = 4,
+        max_total: int = 12,
+    ) -> list[RetrievedChunk]:
+        """Search several queries and return the best-matching sections in full.
+
+        A section's management advice is often in a different chunk from the symptoms that
+        matched the query, so every chunk of the top sections is included, in document order.
+        Ids are relabelled S1..Sn.
+        """
+        best: dict[str, RetrievedChunk] = {}
+        for query in queries:
+            for chunk in self.search(query, top_k, min_similarity):
+                kept = best.get(chunk.doc_id)
+                if kept is None or chunk.similarity > kept.similarity:
+                    best[chunk.doc_id] = chunk
+        ranked = sorted(best.values(), key=lambda c: c.similarity, reverse=True)
+
+        out: list[RetrievedChunk] = []
+        seen: set[str] = set()
+        sections: list[str] = []
+        for hit in ranked:
+            if len(out) >= max_total:
+                break
+            if hit.section and hit.section not in sections and len(sections) < max_sections:
+                sections.append(hit.section)
+                group = sorted(self._section_chunks(hit.section, hit.similarity), key=_chunk_order)
+            elif hit.section in sections:
+                continue  # already added with its section
+            else:
+                group = [hit]
+            for chunk in group:
+                if chunk.doc_id not in seen and len(out) < max_total:
+                    seen.add(chunk.doc_id)
+                    out.append(chunk)
+        for i, chunk in enumerate(out, start=1):
+            chunk.id = f"S{i}"
+        return out
+
+
+def _chunk_order(chunk: RetrievedChunk) -> int:
+    return int(chunk.doc_id.rsplit("-c", 1)[-1])
+
+
+def _to_chunk(label: str, doc_id: str, text: str, meta: dict, similarity: float) -> RetrievedChunk:
+    return RetrievedChunk(
+        id=label,
+        text=text,
+        source_title=str(meta.get("source_title", "")),
+        page=int(meta.get("page") or 0) or None,
+        similarity=similarity,
+        doc_id=doc_id,
+        section=str(meta.get("section", "")),
+    )

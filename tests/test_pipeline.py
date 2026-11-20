@@ -30,7 +30,11 @@ GOOD_ANSWER = GroundedAnswer(
     confidence="high",
 )
 
-CROP_Q = Understanding(category="crop_question", search_query_en="rice blast diamond spots leaves")
+CROP_Q = Understanding(
+    category="crop_question",
+    search_query_en="diamond spots grey centre leaves",
+    likely_conditions=["rice blast"],
+)
 
 
 @pytest.fixture
@@ -66,7 +70,7 @@ async def test_first_message_asks_consent_and_answers(settings, retriever):
 
 
 async def test_greeting_only_gets_welcome(settings, retriever):
-    greeting = Understanding(category="greeting", search_query_en="")
+    greeting = Understanding(category="greeting", search_query_en="", likely_conditions=[])
     p = make(settings, retriever, {Understanding: greeting})
     replies = await p.handle(text_msg("hello"))
     assert len(replies) == 1 and "Reply 1 for YES" in replies[0].text
@@ -74,7 +78,13 @@ async def test_greeting_only_gets_welcome(settings, retriever):
 
 async def test_consent_reply_is_stored(settings, retriever):
     p = make(
-        settings, retriever, {Understanding: Understanding(category="greeting", search_query_en="")}
+        settings,
+        retriever,
+        {
+            Understanding: Understanding(
+                category="greeting", search_query_en="", likely_conditions=[]
+            )
+        },
     )
     await consent(p, "1")
     assert p.store.get_consent(p.store.user_hash("telegram", "42")) == "yes"
@@ -120,7 +130,11 @@ async def test_other_crop_question(settings, retriever):
     p = make(
         settings,
         retriever,
-        {Understanding: Understanding(category="other_crop", search_query_en="")},
+        {
+            Understanding: Understanding(
+                category="other_crop", search_query_en="", likely_conditions=[]
+            )
+        },
     )
     await consent(p)
     [reply] = await p.handle(text_msg("cotton bollworm?"))

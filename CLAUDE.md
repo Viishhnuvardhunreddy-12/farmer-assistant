@@ -36,9 +36,9 @@ These are settings in `.env`, not code. Fill them in once Phase 0 field intervie
 
 | Decision | Setting | Status |
 |---|---|---|
-| Crop | `CROP` | example value `paddy`, not final |
-| Region | `REGION` | not decided |
-| Language | `LANGUAGE_CODE` / `LANGUAGE_NAME` | example `te` / Telugu, not final |
+| Crop | `CROP` | **Decided:** `chilli` (major high-value crop in the Guntur/Palnadu belt). Confirm the top problems (thrips, mites, leaf curl, fruit rot…) in farmer interviews |
+| Region | `REGION` | **Decided:** Palnadu district, Andhra Pradesh, around Paluvai / Rentachintala. Primary sources: ANGRAU (AP state agricultural university) |
+| Language | `LANGUAGE_CODE` / `LANGUAGE_NAME` | `te` / Telugu, the local language for this region |
 | Speech provider (STT/TTS) | `SPEECH_PROVIDER` | not chosen; voice notes get a "please type" reply until then. Candidates: Bhashini, Sarvam AI, Google Cloud Speech |
 | Expert contact shown in fallbacks | `EXPERT_CONTACT` | defaults to Kisan Call Centre; confirm with the local extension office |
 | Translated fixed messages | `app/ui_text.py` | English only; the local-language version must be written or checked by a native speaker, not by an LLM |
@@ -78,7 +78,7 @@ pipeline.handle_message
       ├─ voice  → speech/ STT  (when a provider is configured)
       ├─ photo  → vision/ diagnose (LLM vision, structured output)
       ├─ text   → llm/ understand (scope check + English search query)
-      ├─ rag/ retrieve from Chroma (trusted sources only)
+      ├─ rag/ retrieve from Chroma (trusted sources only; whole matching sections)
       ├─ llm/ grounded answer (structured: answer, quotes, confidence)
       ├─ safety/ guard (verify quotes + numbers, decide fallback)
       └─ store/ log interaction (content only if consented)
@@ -152,7 +152,7 @@ cp .env.example .env            # then fill in keys and Phase 0 decisions
 python scripts/ingest.py
 
 # ask a question from the terminal (no messaging needed)
-python scripts/ask.py "my paddy leaves have brown spots"
+python scripts/ask.py "my chilli leaves are curling upwards"
 python scripts/ask.py --image leaf.jpg "what is this?"
 
 # test with a real Telegram bot, no public URL needed

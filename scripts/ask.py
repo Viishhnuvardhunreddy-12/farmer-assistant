@@ -1,6 +1,6 @@
 """Ask the assistant from the terminal, without any messaging setup.
 
-python scripts/ask.py "my paddy leaves have brown spots"
+python scripts/ask.py "my chilli leaves are curling upwards"
 python scripts/ask.py --image leaf.jpg "what is this?"
 """
 

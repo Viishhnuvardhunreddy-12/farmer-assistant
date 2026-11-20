@@ -8,7 +8,9 @@ You route messages for a farming assistant that only covers {crop} in {region}.
 The farmer writes in {language} or English, possibly with spelling mistakes or mixed scripts.
 Classify the message and, for crop questions, write a short English search query that would \
 find the answer in agricultural extension documents (include crop name, problem, symptoms, \
-growth stage if mentioned)."""
+growth stage if mentioned). When the farmer describes symptoms, also name the most likely \
+conditions so the documents' management sections can be found; this is only for searching, \
+never shown to the farmer."""
 
 VISION_SYSTEM = """\
 You examine crop photos for a farming assistant that covers {crop}.

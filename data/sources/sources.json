@@ -1,0 +1,61 @@
+{
+  "tnau_rice_diseases.txt": {
+    "crop": "paddy",
+    "title": "TNAU Agritech Portal - Rice Diseases",
+    "publisher": "Tamil Nadu Agricultural University (TNAU), Coimbatore",
+    "url": "https://agritech.tnau.ac.in/crop_protection/rice_diseases/rice_1.html",
+    "retrieved_on": "2026-11-20",
+    "notes": "Saved from 15 disease pages and their management pages; each section starts with its source URL. Varieties named are Tamil Nadu varieties.",
+    "reviewed_by": "",
+    "reviewed_on": ""
+  },
+  "ppqs_chilli_thrips_parvispinus.pdf": {
+    "crop": "chilli",
+    "title": "Monitoring, Diagnosis and Management of South East Asian Thrips (Thrips parvispinus) in Chilli, June 2022",
+    "publisher": "Directorate of Plant Protection, Quarantine & Storage (PPQS), Govt. of India",
+    "url": "https://ppqs.gov.in/sites/default/files/south_east_asian_thrips_thrips_parvispinus-monitoring_and_management.pdf",
+    "notes": "Text layer is clean, including the CIB&RC approved insecticide annexure (p. 23). Pages 1-6 (cover, foreword, preface, contributors, contents) and 15 (blank survey form) are skipped.",
+    "retrieved_on": "2026-11-20",
+    "reviewed_by": "",
+    "reviewed_on": "",
+    "skip_pages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      15
+    ]
+  },
+  "ppqs_adhoc_management_strategies_on_thrips_parvispinus.pdf": {
+    "crop": "chilli",
+    "title": "Management strategies for invasive thrips (Thrips parvispinus) in Chilli (Technical Booklet IPM-01/2022)",
+    "publisher": "Directorate of Plant Protection, Quarantine & Storage (PPQS), Govt. of India",
+    "url": "https://ppqs.gov.in/sites/default/files/adhoc_management_strategies_on_thrips_parvispinus.pdf",
+    "notes": "Annexure table is an image and is not indexed; the text sections are clean.",
+    "retrieved_on": "2026-11-20",
+    "reviewed_by": "",
+    "reviewed_on": ""
+  },
+  "tnau_chilli_pests_diseases.txt": {
+    "crop": "chilli",
+    "title": "TNAU Agritech Portal - Chilli pests and diseases",
+    "publisher": "Tamil Nadu Agricultural University (TNAU), Coimbatore",
+    "url": "https://agritech.tnau.ac.in/crop_protection/crop_prot_crop_insect-veg_chillies_pest&disease.html",
+    "notes": "Saved from 17 pest, disease and post-harvest disease pages; each section starts with its source URL. Tamil Nadu recommendations: check doses and product approvals against CIB&RC.",
+    "retrieved_on": "2026-11-20",
+    "reviewed_by": "",
+    "reviewed_on": ""
+  },
+  "vikaspedia_chilli.txt": {
+    "crop": "chilli",
+    "title": "Vikaspedia - Chilli package of practices and IPM strategies",
+    "publisher": "Vikaspedia (Govt. of India portal, MeitY/C-DAC); content credited to ICAR and NIPHM/PPQS",
+    "url": "https://en.vikaspedia.in/viewcontent/agriculture/crop-production/package-of-practices/spices/chillies",
+    "notes": "Saved from 5 pages: package of practices, IPM pests, insect pest and disease descriptions, crop stage-wise IPM.",
+    "retrieved_on": "2026-11-20",
+    "reviewed_by": "",
+    "reviewed_on": ""
+  }
+}

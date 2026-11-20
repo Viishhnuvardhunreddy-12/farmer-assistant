@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=ROOT / ".env", extra="ignore")
 
     # Phase 0 decisions
-    crop: str = "paddy"
+    crop: str = "chilli"
     region: str = ""
     language_code: str = "te"
     language_name: str = "Telugu"

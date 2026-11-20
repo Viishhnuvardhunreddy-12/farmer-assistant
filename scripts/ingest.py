@@ -18,9 +18,9 @@ def main() -> None:
             f"No {s.sources_dir}/sources.json found. List your vetted documents there first "
             "(see data/sources/README.md)."
         )
-    chunks = build_chunks(s.sources_dir)
+    chunks = build_chunks(s.sources_dir, s.crop)
     if not chunks:
-        raise SystemExit("No text extracted from the listed sources.")
+        raise SystemExit(f"No text extracted from the sources listed for crop {s.crop!r}.")
     retriever = Retriever(str(s.chroma_dir), s.collection_name)
     retriever.rebuild(chunks)
     print(f"Indexed {len(chunks)} chunks into '{s.collection_name}'.")

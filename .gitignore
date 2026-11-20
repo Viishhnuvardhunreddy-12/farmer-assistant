@@ -7,3 +7,8 @@ data/processed/*
 data/app.db
 .pytest_cache/
 .ruff_cache/
+# Source documents are third-party material; keep them local (sources.json records where each came from)
+data/sources/*
+!data/sources/README.md
+!data/sources/sources.example.json
+!data/sources/sources.json

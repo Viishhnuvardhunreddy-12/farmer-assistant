@@ -34,6 +34,7 @@ class RetrievedChunk:
     page: int | None
     similarity: float
     doc_id: str = ""  # stable id in the vector store; `id` is the short label shown to the LLM
+    section: str = ""
 
     @property
     def citation(self) -> str:

@@ -115,7 +115,11 @@ class Pipeline:
                 understanding.category, "out_of_scope"
             )
             return Reply(self._t(key))
-        return await self._grounded(question, understanding.search_query_en, record)
+        queries = [understanding.search_query_en] + [
+            f"{self.s.crop} {condition} management control"
+            for condition in understanding.likely_conditions[:2]
+        ]
+        return await self._grounded(question, queries, record)
 
     async def _answer_photo(
         self, msg: IncomingMessage, caption: str, record: InteractionRecord
@@ -128,18 +132,27 @@ class Pipeline:
             record.fallback_reason = reason
             return Reply(self._t(reason))
 
-        query = f"{self.s.crop} {diagnosis.likely_condition} symptoms management control"
-        reply = await self._grounded(caption, query, record, diagnosis_summary(diagnosis))
+        condition = f"{self.s.crop} {diagnosis.likely_condition}"
+        queries = [f"{condition} symptoms", f"{condition} management control"]
+        reply = await self._grounded(caption, queries, record, diagnosis_summary(diagnosis))
         if record.fallback_reason:
             return reply
         intro = self._t("diagnosis_intro", condition=diagnosis.likely_condition)
         return Reply(f"{intro}\n\n{reply.text}")
 
     async def _grounded(
-        self, question: str, query: str, record: InteractionRecord, diagnosis_text: str = ""
+        self,
+        question: str,
+        queries: list[str],
+        record: InteractionRecord,
+        diagnosis_text: str = "",
     ) -> Reply:
-        record.search_query = query
-        chunks = self.retriever.search(query, self.s.retrieval_top_k, self.s.min_source_similarity)
+        # Search queries may name likely conditions; the answer itself is still limited to
+        # the retrieved source text and checked by the safety guard.
+        record.search_query = " | ".join(queries)
+        chunks = self.retriever.search_many(
+            queries, self.s.retrieval_top_k, self.s.min_source_similarity
+        )
         record.retrieved_ids = [c.doc_id for c in chunks]
         if not chunks:
             record.fallback_reason = "no_sources"
