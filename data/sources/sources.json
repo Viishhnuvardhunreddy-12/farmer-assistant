@@ -57,5 +57,46 @@
     "retrieved_on": "2026-11-20",
     "reviewed_by": "",
     "reviewed_on": ""
+  },
+  "cibrc_approved_uses_chilli.md": {
+    "crop": "chilli",
+    "title": "CIB&RC approved uses of pesticides on chilli (as on 30.09.2026)",
+    "publisher": "Central Insecticides Board & Registration Committee, Directorate of Plant Protection, Quarantine & Storage, Govt. of India",
+    "url": "https://ppqs.gov.in/divisions/cib-rc/major-uses-of-pesticides",
+    "notes": "Chilli rows extracted with scripts/extract_cibrc_crop.py from the six official 'Major Uses of Pesticides' lists (insecticides, fungicides, herbicides, PGR, bio-insecticides, bio-fungicides) saved in data/sources/raw/. Rows with irregular columns were skipped and listed in data/sources/raw/cibrc_skipped_rows_chilli.txt for manual review.",
+    "retrieved_on": "2026-11-24",
+    "reviewed_by": "",
+    "reviewed_on": ""
+  },
+  "angrau_kvk_garikapadu_chilli.md": {
+    "crop": "chilli",
+    "title": "ANGRAU KVK Garikapadu - chilli findings (varieties, fertigation, NPK dose)",
+    "publisher": "Acharya N. G. Ranga Agricultural University / ICAR, Dr. K. L. Rao KVK Garikapadu, Krishna district",
+    "url": "https://angrau.ac.in/downloads/KVK/KVK,%20Garikapadu%20activities.pdf",
+    "notes": "Only the chilli passages, copied word for word and checked against the PDF (saved in data/sources/raw/). The report covers other crops too, which are deliberately left out.",
+    "retrieved_on": "2026-11-24",
+    "reviewed_by": "",
+    "reviewed_on": ""
+  },
+  "niphm_aesa_ipm_chilli.pdf": {
+    "crop": "chilli",
+    "title": "AESA based IPM - Chillies/Capsicum (AESA based IPM Package No. 24)",
+    "publisher": "National Institute of Plant Health Management (NIPHM), Hyderabad, with Directorate of Plant Protection, Quarantine & Storage and NCIPM, Govt. of India",
+    "url": "https://niphm.gov.in/IPMPackages/Chilli.pdf",
+    "retrieved_on": "2026-11-24",
+    "skip_pages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      23
+    ],
+    "notes": "Saved by the project owner from the NIPHM site (the site blocks scripted downloads). Clean text layer. Pages 1-8 (cover, working group, contents) and 23 (blank) skipped. Page 3 says 'For internal circulation only. Not for sale.' Doses in the crop stage-wise IPM section are per acre; CIB&RC doses are per hectare.",
+    "reviewed_by": "",
+    "reviewed_on": ""
   }
 }

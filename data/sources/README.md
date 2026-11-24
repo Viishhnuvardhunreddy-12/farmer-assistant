@@ -40,6 +40,16 @@ when the farmer only describes symptoms.
 tables did not extract cleanly; type the needed sections into a `.md` file instead
 and have an expert check it.
 
+**Approved pesticide uses (CIB&RC):** download the current "Major Uses of Pesticides"
+PDFs from https://ppqs.gov.in/divisions/cib-rc/major-uses-of-pesticides into `raw/`
+(named `cibrc_mup_<insecticides|fungicides|herbicides|pgr|bioinsecticides|biofungicides>_<date>.pdf`)
+and run `python scripts/extract_cibrc_crop.py data/sources/raw/cibrc_mup_*.pdf`. Rows whose
+columns don't line up are skipped and listed in `raw/cibrc_skipped_rows_<crop>.txt`; an
+expert should check those by hand. Re-run whenever PPQS publishes new lists.
+
+**`raw/`** holds original downloads. Nothing in it is indexed; documents that mix several
+crops (such as KVK reports) are excerpted word for word into a `.md` file here instead.
+
 Source documents are git-ignored (they are third-party material); only this README,
 `sources.json` and the example are committed.
 Scanned PDFs without a text layer produce no text; OCR them first.

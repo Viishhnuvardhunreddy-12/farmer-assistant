@@ -123,6 +123,7 @@ AIhealthcare/                 # folder name is historical; this is the farmer as
 │   └── safety/               # quote/number verification, fallback decisions
 ├── data/
 │   ├── sources/              # trusted docs (PDF/TXT/MD) + sources.json manifest
+│   │   └── raw/              # original downloads (not indexed); excerpts are made from these
 │   ├── processed/            # Chroma index (generated, git-ignored)
 │   └── eval/                 # expert-reviewed question/answer set
 ├── scripts/                  # ingest, local CLI, Telegram polling, eval
@@ -147,6 +148,10 @@ AIhealthcare/                 # folder name is historical; this is the farmer as
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env            # then fill in keys and Phase 0 decisions
+
+# pull the crop's rows out of the official CIB&RC "Major Uses of Pesticides" PDFs
+# (download them into data/sources/raw/ first; see data/sources/README.md)
+python scripts/extract_cibrc_crop.py data/sources/raw/cibrc_mup_*.pdf
 
 # index trusted sources (put PDFs/TXT/MD in data/sources/ first)
 python scripts/ingest.py

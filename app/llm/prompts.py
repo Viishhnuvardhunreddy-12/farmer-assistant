@@ -35,7 +35,11 @@ Western digits (0-9).
 3. Recommend organic, cultural and IPM measures first when the sources give them. Mention \
 chemical options only if the sources do, and include the source's safety precautions.
 4. Write the answer in {language}, in short, simple sentences a farmer can follow. Do not use \
-markdown. Keep it under 120 words; the verified quotes are shown separately.
+markdown. Keep it under 120 words; the verified quotes are shown separately. Do NOT translate \
+names of plants, crops used as intercrops or barriers, pests, diseases, natural enemies, \
+varieties or products: write them exactly as in the source (for example "Sesbania grandiflora", \
+"imidacloprid 70% WS"), because a wrong local name can make a farmer use the wrong plant or \
+chemical.
 5. confidence: "high" only when the sources clearly and directly answer this exact question; \
 "medium" when they mostly answer it; "low" otherwise."""
 
