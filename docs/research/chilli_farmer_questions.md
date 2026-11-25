@@ -43,7 +43,7 @@ documents we still need, and what to put in the test set (`data/eval/questions.j
 | 8 | Leaf spot, blight, bacterial leaf spot | 4.4% | "bacterial leaf spot management" | Yes | ❔ |
 | 9 | Fruit rot, die-back, anthracnose | 3.5% | "die back and fruit rot management" | Yes | ✅ |
 | 10 | Fruit borer, tobacco caterpillar | 3.2% | "chilli fruit borer damage" | Yes | ✅ |
-| 11 | Gall midge (mostly AP/TS) | 3.0% | "chilli midge fly management" | Yes | ❌ |
+| 11 | Gall midge (mostly AP/TS) | 3.0% | "chilli midge fly management" | Yes | 🟡 (symptoms only) |
 | 12 | Market price | 2.6% | "market price of chilli in Guntur" | No (Phase 2) | — |
 | 13 | Powdery mildew | 2.6% | "chilli powdery mildew" | Yes | ✅ |
 | 14 | Growth, flowering, growth regulators | 2.3% | "plant growth regulator in chillies" | Yes | ✅ (added 25 Nov) |

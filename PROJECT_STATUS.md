@@ -12,7 +12,7 @@ A WhatsApp/Telegram advisor for **chilli** farmers around **Paluvai / Rentachint
 |---|---|---|
 | Backend code (Phase 1) | ✅ Built | Webhooks, message pipeline, search, safety checks, logging. 48 automated tests pass |
 | AI model | ✅ Working | Gemini `gemini-2.5-flash` (free tier: 20 requests/day). Claude also supported |
-| Documents (chilli) | 🟡 Good start | 10 documents, 571 searchable passages; 27 of 30 common topics covered. Gaps: gall midge, bacterial wilt, AP sowing months |
+| Documents (chilli) | 🟡 Good start | 11 documents, 578 searchable passages; 27 of 30 common topics covered. Gaps: bacterial wilt, AP sowing months; gall midge symptoms only |
 | Converting documents to embeddings | ✅ Done automatically | Happens during `scripts/ingest.py`; see [section 5](#5-embeddings-already-done) |
 | Expert review of documents | ❌ Not started | `reviewed_by` is empty for every source |
 | Test questions (evaluation set) | 🟡 Started | 2 real questions in `data/eval/questions.jsonl`; target 30–50 |
@@ -105,7 +105,8 @@ All documents are in `data/sources/` and recorded in `data/sources/sources.json`
 | 8 | TNAU Crop Production Guide 2020: chilli production practices | TNAU + TN Horticulture Dept | 11 | Added 25 Nov. Nursery, damping off, NPK doses, boron, fertigation totals, NAA for fruit set, micronutrient sprays. **Per hectare**, Tamil Nadu recommendations. Word-for-word excerpt; scrambled fertigation table and non-CIB&RC herbicides left out |
 | 9 | Dr YSRHU Improved Varieties (pp. 16–24) | Dr YSR Horticultural University, HRS Lam, Guntur (AP) | 9 | Added 25 Nov. AP chilli varieties LCA-616, 620, 625, 657, 680, 684, hybrid LCH-111, paprika: duration, yield, virus/drought tolerance |
 | 10 | Advances in Chilli Crop Production (EF-144/2024) | ICAR-IIHR, Bengaluru | 6 | Added 25 Nov. Protray nursery, basal fertilizer ratio, weekly drip fertigation, sticky traps, Arka Meghana (recommended for AP). **Per acre**. Pest table left out (garbled columns, names dicofol) |
-| | **Total** | | **571** | |
+| 11 | Integrated Pest Management for Chilli (Extension Folder-54, Feb 2023) | ICAR-NCIPM, with KVK Pandirimamidi (AP) | 7 | Added 25 Nov. Gall midge symptoms (no gall midge treatment given), spray thresholds (ETL), nursery solarisation, barrier crops, drying below 10% moisture against aflatoxin. Word-for-word excerpt; dose list left out |
+| | **Total** | | **578** | |
 
 **Kept out of the index on purpose**
 - `raw/ppqs_advisory_on_chilli_thrips.pdf`: scanned, and its dose table came out garbled ("50-600" for "500-600").
@@ -120,7 +121,8 @@ All documents are in `data/sources/` and recorded in `data/sources/sources.json`
 |---|---|
 | ✅ Covered (27) | Thrips, black thrips, yellow mite, aphids, whitefly, fruit borer, Spodoptera, mosaic, die-back / fruit rot, powdery mildew, damping off, Fusarium wilt, Cercospora and bacterial leaf spot, Choanephora wet rot, nematodes, NPK fertilizer, micronutrients (Zn, B, Ca), flower drop, seed rate and spacing, irrigation, weed control, harvest and drying, pesticide waiting periods, safe spraying, nursery/protrays, fertigation, AP varieties (added 25 Nov) |
 | 🟡 Thin (1) | Leaf curl virus and bud necrosis (general viral management, plus tolerant AP varieties) |
-| ❌ Missing (3) | **Sowing months for AP**, bacterial wilt, gall midge (no clean official source found; the ICAR-NCIPM folder's text is scrambled) |
+| 🟡 Thin | Gall midge: symptoms only (ICAR-NCIPM). No official management advice found; a Telangana study found no tested chemical effective |
+| ❌ Missing (2) | **Sowing months for AP**, bacterial wilt |
 
 ---
 
@@ -205,7 +207,7 @@ flowchart LR
 
 ### Documents still missing (from the Kisan Call Centre research)
 On 25 Nov we added official documents for fertilizer, boron, fertigation, flower drop, nursery, damping off and AP varieties (documents 8–10 in section 4). Still missing:
-1. **Gall midge:** no clean official source found online. The ICAR-NCIPM chilli IPM folder (https://nriipm.res.in/NCIPMPDFs/FOLDERS/chilienglish_.pdf) needs typing up by hand and an expert check.
+1. **Gall midge management:** symptoms are now covered (ICAR-NCIPM folder, added 25 Nov), but no official source gives management. A Telangana study (Sireesha & Madhavi Latha, Indian Journal of Plant Protection, 2017) found none of the tested chemicals effective. Ask the Lam station or KVK what they advise.
 2. **Bacterial wilt:** the ICAR folders on krishi.icar.gov.in don't open from this computer; download them by hand.
 3. **AP sowing months and ANGRAU's own fertilizer doses:** ANGRAU *Vyavasaya Panchangam* 2026-27 isn't online; get a copy from the Lam station or KVK.
 

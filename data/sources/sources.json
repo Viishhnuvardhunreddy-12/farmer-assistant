@@ -191,5 +191,15 @@
       69,
       70
     ]
+  },
+  "icar_ncipm_ipm_chilli_folder.md": {
+    "crop": "chilli",
+    "title": "Integrated Pest Management for Chilli (ICAR-NCIPM Extension Folder-54, Feb 2023)",
+    "publisher": "ICAR-National Research Centre for Integrated Pest Management, New Delhi (with KVK Pandirimamidi, East Godavari, AP)",
+    "url": "https://nriipm.res.in/NCIPMPDFs/FOLDERS/chilienglish_.pdf",
+    "notes": "Word-for-word excerpt, re-joined from the folder's columns (pdftotext -layout) and checked against the PDF; original in data/sources/raw/. Adds gall midge damage symptoms (the folder gives no gall midge-specific management), ETLs, nursery solarisation, barrier/trap crops, drying below 10% moisture against aflatoxin. Left out: the list of label-claim insecticide/fungicide doses (CIB&RC list covers approved uses), the introduction and the bio-pesticide spray list.",
+    "retrieved_on": "2026-11-25",
+    "reviewed_by": "",
+    "reviewed_on": ""
   }
 }
