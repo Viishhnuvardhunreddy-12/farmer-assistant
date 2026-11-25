@@ -1,0 +1,2 @@
+{"id": "q001", "question": "mirapa akulu endhuku muduchukuntunnay", "expect": "answer", "notes": "Romanised Telugu: why are chilli leaves curling? Expected: thrips (tamara purugulu). Asked on Telegram 2026-11-24; bot answered correctly."}
+{"id": "q002", "question": "cotton ela pandinchali", "expect": "fallback", "notes": "Romanised Telugu: how to grow cotton? Other crop, so the bot should give the other-crop message with the expert contact. Asked on Telegram 2026-11-24; bot replied correctly."}

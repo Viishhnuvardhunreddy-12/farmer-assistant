@@ -1,6 +1,6 @@
 # Farmer Assistant: project status
 
-_Last updated: 24 November 2026. Phase 1 (MVP). See [CLAUDE.md](CLAUDE.md) for scope and the safety rules._
+_Last updated: 25 November 2026. Phase 1 (MVP). See [CLAUDE.md](CLAUDE.md) for scope and the safety rules._
 
 A WhatsApp/Telegram advisor for **chilli** farmers around **Paluvai / Rentachintala, Palnadu district, Andhra Pradesh**. It answers in **Telugu**, using only vetted agricultural documents, and sends the farmer to an expert whenever an answer can't be verified.
 
@@ -10,13 +10,13 @@ A WhatsApp/Telegram advisor for **chilli** farmers around **Paluvai / Rentachint
 
 | Area | Status | Notes |
 |---|---|---|
-| Backend code (Phase 1) | ✅ Built | Webhooks, message pipeline, search, safety checks, logging. 47 automated tests pass |
+| Backend code (Phase 1) | ✅ Built | Webhooks, message pipeline, search, safety checks, logging. 48 automated tests pass |
 | AI model | ✅ Working | Gemini `gemini-2.5-flash` (free tier: 20 requests/day). Claude also supported |
-| Documents (chilli) | 🟡 Good start | 7 documents, 545 searchable passages; 25 of 30 common topics covered |
+| Documents (chilli) | 🟡 Good start | 10 documents, 571 searchable passages; 27 of 30 common topics covered. Gaps: gall midge, bacterial wilt, AP sowing months |
 | Converting documents to embeddings | ✅ Done automatically | Happens during `scripts/ingest.py`; see [section 5](#5-embeddings-already-done) |
 | Expert review of documents | ❌ Not started | `reviewed_by` is empty for every source |
-| Test questions (evaluation set) | ❌ Empty | `data/eval/questions.jsonl` has 0 questions |
-| Telegram test bot | ⏳ Code ready, not set up | Needs a bot token from @BotFather |
+| Test questions (evaluation set) | 🟡 Started | 2 real questions in `data/eval/questions.jsonl`; target 30–50 |
+| Telegram test bot | ✅ Working | @mirchi_salahadarudu_bot; runs only while `scripts/telegram_polling.py` is running on this computer |
 | WhatsApp | ⏳ Code ready, not set up | Needs a Meta WhatsApp Business account |
 | Voice notes (speech) | ❌ Provider not chosen | Bot replies "please type" for now |
 | Telugu fixed messages | ❌ English only | Must be written or checked by a native speaker |
@@ -102,7 +102,10 @@ All documents are in `data/sources/` and recorded in `data/sources/sources.json`
 | 5 | TNAU Agritech: chilli pests and diseases | Tamil Nadu Agricultural University | 35 | 17 pages. Written for Tamil Nadu; some older chemicals (phosalone, methyl demeton) need expert check |
 | 6 | Management strategies for invasive thrips (IPM-01/2022) | PPQS | 13 | Text only; its annexure table is an image and not readable |
 | 7 | ANGRAU KVK Garikapadu: chilli findings | ANGRAU / ICAR KVK, Krishna district | 4 | AP varieties (LCA-334, 625, 620), NPK 450:90:180 kg/ha. Copied word for word and checked |
-| | **Total** | | **545** | |
+| 8 | TNAU Crop Production Guide 2020: chilli production practices | TNAU + TN Horticulture Dept | 11 | Added 25 Nov. Nursery, damping off, NPK doses, boron, fertigation totals, NAA for fruit set, micronutrient sprays. **Per hectare**, Tamil Nadu recommendations. Word-for-word excerpt; scrambled fertigation table and non-CIB&RC herbicides left out |
+| 9 | Dr YSRHU Improved Varieties (pp. 16–24) | Dr YSR Horticultural University, HRS Lam, Guntur (AP) | 9 | Added 25 Nov. AP chilli varieties LCA-616, 620, 625, 657, 680, 684, hybrid LCH-111, paprika: duration, yield, virus/drought tolerance |
+| 10 | Advances in Chilli Crop Production (EF-144/2024) | ICAR-IIHR, Bengaluru | 6 | Added 25 Nov. Protray nursery, basal fertilizer ratio, weekly drip fertigation, sticky traps, Arka Meghana (recommended for AP). **Per acre**. Pest table left out (garbled columns, names dicofol) |
+| | **Total** | | **571** | |
 
 **Kept out of the index on purpose**
 - `raw/ppqs_advisory_on_chilli_thrips.pdf`: scanned, and its dose table came out garbled ("50-600" for "500-600").
@@ -115,9 +118,9 @@ All documents are in `data/sources/` and recorded in `data/sources/sources.json`
 
 | Result | Topics |
 |---|---|
-| ✅ Covered (25) | Thrips, black thrips, yellow mite, aphids, whitefly, fruit borer, Spodoptera, mosaic, die-back / fruit rot, powdery mildew, damping off, Fusarium wilt, Cercospora and bacterial leaf spot, Choanephora wet rot, nematodes, NPK fertilizer, micronutrients (Zn, B, Ca), flower drop, seed rate and spacing, irrigation, weed control, harvest and drying, pesticide waiting periods, safe spraying |
-| 🟡 Thin (3) | Leaf curl virus (covered only under general viral management), bud necrosis, AP varieties (one ANGRAU passage) |
-| ❌ Missing (2) | **Sowing months for AP**, bacterial wilt |
+| ✅ Covered (27) | Thrips, black thrips, yellow mite, aphids, whitefly, fruit borer, Spodoptera, mosaic, die-back / fruit rot, powdery mildew, damping off, Fusarium wilt, Cercospora and bacterial leaf spot, Choanephora wet rot, nematodes, NPK fertilizer, micronutrients (Zn, B, Ca), flower drop, seed rate and spacing, irrigation, weed control, harvest and drying, pesticide waiting periods, safe spraying, nursery/protrays, fertigation, AP varieties (added 25 Nov) |
+| 🟡 Thin (1) | Leaf curl virus and bud necrosis (general viral management, plus tolerant AP varieties) |
+| ❌ Missing (3) | **Sowing months for AP**, bacterial wilt, gall midge (no clean official source found; the ICAR-NCIPM folder's text is scrambled) |
 
 ---
 
@@ -161,6 +164,7 @@ flowchart LR
 ## 7. What live testing showed
 
 - **Working end to end:** "మిరప ఆకులు పైకి ముడుచుకుంటున్నాయి" ("chilli leaves curling up") → correctly identified **thrips (తామర పురుగు)**. Cultural steps came first, then biological, then chemical, with doses quoted word for word, sources named, and high confidence.
+- **First Telegram test (24 Nov 2026):** "mirapa akulu endhuku muduchukuntunnay" (Telugu typed in English letters) → correctly answered **thrips (తామర పురుగులు)**. "cotton ela pandinchali" → correctly replied that only chilli is covered, with the toll-free number. Fixed: pressing **Start** (`/start`) no longer triggers an "off topic" reply or uses an AI request.
 - **Safety fallbacks work:** a cotton question and an unanswerable question were correctly sent to an expert.
 - **Bugs found and fixed:**
   - Gemini API version error.
@@ -177,26 +181,48 @@ flowchart LR
 ### Before any farmer uses it (required)
 - [ ] **Expert review of every document.** An agronomist from ANGRAU (Lam station, Guntur) or the district KVK checks each source and fills in `reviewed_by` / `reviewed_on` in `sources.json`. Includes the 19 skipped CIB&RC rows and the TNAU chemicals.
 - [ ] **AP-specific documents:** ANGRAU chilli package of practices or the *Vyavasaya Panchangam* chilli chapter, for sowing months, AP varieties and local doses. Ask at the Lam station or KVK.
-- [ ] **Test question set:** 30–50 real Telugu farmer questions in `data/eval/questions.jsonl`, each marked "answer" or "fallback". Run `scripts/eval.py`, and have the expert grade each answer correct, wrong or unsafe. **Any "unsafe" answer blocks launch.**
-- [ ] **Telugu fixed messages** in `app/ui_text.py` (consent, fallbacks, safety note), written by a native speaker.
-- [ ] **Local expert contact** in `EXPERT_CONTACT`.
+- [ ] **Test question set:** start with 30–50 real Telugu farmer questions in `data/eval/questions.jsonl`, each marked "answer" or "fallback", and grow it to 100–200 before the pilot, as other farmer bots did. Weight the topics like the real Kisan Call Centre calls in [docs/research/chilli_farmer_questions.md](docs/research/chilli_farmer_questions.md): about a quarter sucking pests, then fertilizer, leaf curl, wilt, fruit rot, gall midge, and some out-of-scope questions (weather, prices). Run `scripts/eval.py`, and have the expert grade each answer correct, wrong or unsafe. **Any "unsafe" answer blocks launch.**
+- [ ] **Telugu fixed messages** in `app/ui_text.py` (consent, fallbacks, safety note), written by a native speaker. Keep them short and simple; other farmer bots found less-educated farmers struggled with technical answers. The out-of-scope reply must clearly say weather and prices aren't covered yet: weather is about 22% of AP chilli calls to Kisan Call Centre.
+- [ ] **Local expert contact** in `EXPERT_CONTACT`: a tap-to-call number for the local RBK/RSK officer or KVK, not only Kisan Call Centre. Surveys show many farmers have never used Kisan Call Centre.
 - [ ] **Paid Gemini key** (Google AI Studio billing): removes the 20/day limit and keeps farmer data out of Google's free-tier training.
 
 ### Getting it into farmers' hands
-- [ ] **Telegram test bot:** get a token from @BotFather, put it in `TELEGRAM_BOT_TOKEN`, run `scripts/telegram_polling.py`, and test on your phone.
+- [x] **Telegram test bot:** @mirchi_salahadarudu_bot answered its first real questions on 24 Nov 2026 (see section 7).
+- [ ] **Keep the bot running without this computer:** a small always-on server (for example a cloud VM) so testers can use it any time.
 - [ ] **Photo testing:** 20–30 real chilli photos from Palnadu fields, labelled by the expert, with the farmers' permission.
 - [ ] **Choose a speech provider** (Telugu speech-to-text and text-to-speech) and implement it in `app/speech/`.
+  - In a Telugu farm-audio test, word error rates were Google 33% (best), Gemini 38% and Sarvam 47% (Sarvam was relatively better on farm words). Bhashini wasn't tested.
+  - Test the candidates on 20–30 voice notes from Palnadu farmers before choosing.
+  - Speech recognition often mishears farm words, so **the bot should repeat back what it heard** ("You asked about thrips on chilli?") with its answer. Add a Telugu glossary of pest, product and crop-stage words.
+  - Keep voice replies under 10 seconds.
+- [ ] **Onboarding through people:** a lead farmer or RBK staff member shows farmers how to use the bot (a short demo), rather than only sharing a link. Other bots found that farmers trust advice once it works on their own field.
 - [ ] **WhatsApp:** Meta Business account, phone number, webhook on a server (HTTPS), and the `WHATSAPP_*` settings.
-- [ ] **Pilot:** 20–30 farmers for two weeks; the expert reviews a sample of logged answers.
+- [ ] **Pilot:** 20–30 farmers for two weeks; the expert reviews a sample of logged answers. Measure:
+  - how often the bot answers instead of falling back, and the fallback reasons (Farmer.CHAT answered about 75%; most misses were topics its documents didn't cover);
+  - expert-rated correctness on a sample;
+  - whether farmers acted on the advice, and if not, why (cost and inputs were the main barriers elsewhere);
+  - reply time.
+
+### Documents still missing (from the Kisan Call Centre research)
+On 25 Nov we added official documents for fertilizer, boron, fertigation, flower drop, nursery, damping off and AP varieties (documents 8–10 in section 4). Still missing:
+1. **Gall midge:** no clean official source found online. The ICAR-NCIPM chilli IPM folder (https://nriipm.res.in/NCIPMPDFs/FOLDERS/chilienglish_.pdf) needs typing up by hand and an expert check.
+2. **Bacterial wilt:** the ICAR folders on krishi.icar.gov.in don't open from this computer; download them by hand.
+3. **AP sowing months and ANGRAU's own fertilizer doses:** ANGRAU *Vyavasaya Panchangam* 2026-27 isn't online; get a copy from the Lam station or KVK.
+
+Use the logged fallback reasons ("no_sources") during testing to find further gaps.
 
 ### Technical improvements (nice to have)
 - [ ] Log the AI's draft answer even when the safety guard blocks it, so the expert can see why.
 - [ ] Reduce duplicate passages (Vikaspedia repeats NIPHM) and approved-product entries crowding results.
 - [ ] Multilingual embeddings (see section 5).
+- [ ] Questions about mixing two products, "named product + dose" and "I sprayed just before harvest" are common in real calls. Add test questions to check that they always get verbatim quotes, safety notes and waiting periods, or the expert fallback.
+- [ ] Warn when the CIB&RC list in `data/sources/raw/` is older than about 6 months, because pesticide approvals change. Re-run `extract_cibrc_crop.py` on the new lists.
+- [ ] Photo diagnosis: Plantix got the first diagnosis right only about half the time in field tests. Keep the strict confidence fallback, and ask for a second photo or a symptom when unsure.
+- [ ] Compare a small local model (for example Gemma, Qwen or a Sarvam AI model via Ollama) against Gemini on the expert-graded test set, once it has 30–50 questions. Decision (25 Nov 2026): keep Gemini for the pilot.
 - [x] Commit and push the NIPHM source, `extract_cibrc_crop.py` and the prompt fix.
 
 ### Later phases (not now; see [CLAUDE.md](CLAUDE.md) section 9)
-Farmer profiles, weather advice, crop calendar reminders, mandi prices, feedback buttons (Phase 2); more crops and languages, pest outbreak alerts, expert dashboard (Phase 3).
+Farmer profiles, weather advice, crop calendar reminders, mandi prices, feedback buttons (👍/👎 and follow-up question buttons; Farmer.CHAT's follow-up buttons drove over 45% of its interactions) (Phase 2); more crops and languages, pest outbreak alerts, expert dashboard (Phase 3).
 
 ---
 

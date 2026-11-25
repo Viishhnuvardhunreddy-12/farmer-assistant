@@ -103,6 +103,10 @@ class Pipeline:
         if not question:
             record.fallback_reason = "unsupported_message"
             return Reply(self._t("unsupported_message"))
+        if question.startswith("/"):
+            # Telegram commands (/start, /help) carry no question; don't spend an LLM call.
+            record.fallback_reason = "greeting"
+            return Reply(self._t("greeting"))
         return await self._answer_text(question, record)
 
     async def _answer_text(self, question: str, record: InteractionRecord) -> Reply:

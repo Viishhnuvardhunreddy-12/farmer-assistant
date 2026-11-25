@@ -76,6 +76,15 @@ async def test_greeting_only_gets_welcome(settings, retriever):
     assert len(replies) == 1 and "Reply 1 for YES" in replies[0].text
 
 
+async def test_telegram_start_command_gets_only_welcome_without_llm(settings, retriever):
+    p = make(settings, retriever, {})  # no LLM outputs: any LLM call would fail the test
+    replies = await p.handle(text_msg("/start"))
+    assert len(replies) == 1 and "Reply 1 for YES" in replies[0].text
+    [later] = await p.handle(text_msg("/help", "2"))
+    assert "Ask me anything about growing" in later.text
+    assert p.llm.calls == []
+
+
 async def test_consent_reply_is_stored(settings, retriever):
     p = make(
         settings,
